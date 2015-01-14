@@ -43,9 +43,9 @@ define(
                 ko.computed({
                     read: function () {
                         if (ko.utils.unwrapObservable(value.isOpen)) {
-                            $(element)[this.widgetName]('open');
+                            $(element)[this.widgetAlias]('open');
                         } else {
-                            $(element)[this.widgetName]('close');
+                            $(element)[this.widgetAlias]('close');
                         }
                     },
                     disposeWhenNodeIsRemoved: element,
