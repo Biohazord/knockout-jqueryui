@@ -25,6 +25,10 @@ define(
                 minor: parseInt(match[2], 10)
             };
         }
+        
+        for (var key in window.kojqui.widgetAliases) {
+            $.widget.bridge(window.kojqui.widgetAliases[key], $.ui[key]);
+        }
 
         descendantControllingBindings = ['foreach', 'if', 'ifnot', 'with', 'html', 'text',
             'options'];
