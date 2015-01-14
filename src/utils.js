@@ -4,10 +4,11 @@ define(
     [
         'jquery',
         'knockout',
+        '.',
         'jquery-ui/core'
     ],
 
-    function ($, ko) {
+    function ($, ko, kojqui) {
 
         'use strict';
 
@@ -26,8 +27,12 @@ define(
             };
         }
         
-        for (var key in window.kojqui.widgetAliases) {
-            $.widget.bridge(window.kojqui.widgetAliases[key], $.ui[key]);
+        //Set up the alias map
+        kojqui.widgetAliases = { tooltip: "kojquiTooltip" };
+        
+        //Create each aliased function
+        for (var key in kojqui.widgetAliases) {
+            $.widget.bridge(kojqui.widgetAliases[key], $.ui[key]);
         }
 
         descendantControllingBindings = ['foreach', 'if', 'ifnot', 'with', 'html', 'text',
