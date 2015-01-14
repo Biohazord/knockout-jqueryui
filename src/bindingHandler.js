@@ -34,7 +34,7 @@ define(
             return result;
         };
 
-        subscribeToRefreshOn = function (widgetName, element, bindingValue) {
+        subscribeToRefreshOn = function (widgetName, widgetAlias, element, bindingValue) {
             /// <summary>Creates a subscription to the refreshOn observable.</summary>
             /// <param name='widgetName' type='String'>The widget's name.</param>
             /// <param name='element' type='DOMNode'></param>
@@ -44,7 +44,7 @@ define(
                 ko.computed({
                     read: function () {
                         bindingValue.refreshOn();
-                        $(element)[widgetName]('refresh');
+                        $(element)[widgetAlias]('refresh');
                     },
                     disposeWhenNodeIsRemoved: element
                 });
@@ -57,6 +57,7 @@ define(
             /// name.</param>
 
             this.widgetName = widgetName;
+            this.widgetAlias = window.kojqui.widgetAliases[widgetName] || widgetName;
             this.widgetEventPrefix = widgetName;
             this.options = [];
             this.events = [];
@@ -68,10 +69,11 @@ define(
         BindingHandler.prototype.init = function (element, valueAccessor,
             allBindingsAccessor, viewModel, bindingContext) {
 
-            var widgetName, value, unwrappedOptions, unwrappedEvents,
+            var widgetName, widgetAlias, value, unwrappedOptions, unwrappedEvents,
                 shouldApplyBindingsToDescendants;
 
             widgetName = this.widgetName;
+            widgetAlias = this.widgetAlias;
             value = valueAccessor();
             unwrappedOptions = filterAndUnwrapProperties(value, this.options);
             unwrappedEvents = filterAndUnwrapProperties(value, this.events);
@@ -102,10 +104,10 @@ define(
             });
 
             // initialize the widget
-            $(element)[widgetName](ko.utils.extend(unwrappedOptions, unwrappedEvents));
+            $(element)[widgetAlias](ko.utils.extend(unwrappedOptions, unwrappedEvents));
 
             if (this.hasRefresh) {
-                subscribeToRefreshOn(widgetName, element, value);
+                subscribeToRefreshOn(widgetName, widgetAlias, element, value);
             }
 
             // store the element in the widget observable
@@ -115,7 +117,7 @@ define(
 
             // handle disposal
             ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
-                $(element)[widgetName]('destroy');
+                $(element)[widgetAlias]('destroy');
             });
 
             return { controlsDescendantBindings: shouldApplyBindingsToDescendants };
@@ -124,9 +126,10 @@ define(
 
         BindingHandler.prototype.update = function (element, valueAccessor) {
 
-            var widgetName, value, oldOptions, newOptions;
+            var widgetName, widgetAlias, value, oldOptions, newOptions;
 
             widgetName = this.widgetName;
+            widgetAlias = this.widgetAlias;
             value = valueAccessor();
             oldOptions = ko.utils.domData.get(element, domDataKey);
             newOptions = filterAndUnwrapProperties(value, this.options);
@@ -134,7 +137,7 @@ define(
             // set only the changed options
             $.each(newOptions, function (prop, val) {
                 if (val !== oldOptions[prop]) {
-                    $(element)[widgetName]('option', prop, newOptions[prop]);
+                    $(element)[widgetAlias]('option', prop, newOptions[prop]);
                 }
             });
 
