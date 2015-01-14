@@ -5,10 +5,11 @@ define(
         'jquery',
         'knockout',
         './utils',
+        '.',//Not sure if this will work as I'm not familiar with bower
         'jquery-ui/widget'
     ],
 
-    function ($, ko, utils) {
+    function ($, ko, utils, kojqui) {
 
         'use strict';
 
@@ -57,7 +58,7 @@ define(
             /// name.</param>
 
             this.widgetName = widgetName;
-            this.widgetAlias = window.kojqui.widgetAliases[widgetName] || widgetName;
+            this.widgetAlias = kojqui.widgetAliases[widgetName] || widgetName;
             this.widgetEventPrefix = widgetName;
             this.options = [];
             this.events = [];
